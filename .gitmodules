@@ -1,0 +1,3 @@
+[submodule "src/collectors/ontapclustercollector"]
+	path = src/collectors/ontapclustercollector
+	url = git@github.com:SpringerPE/diamond-ontapclustercollector.git
