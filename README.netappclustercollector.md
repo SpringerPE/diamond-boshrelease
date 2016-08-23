@@ -1,24 +1,11 @@
-# BOSH Release for diamond
+# BOSH Release for Diamond
 
-https://github.com/python-diamond/
+NetApp monitoring using Diamond and https://github.com/SpringerPE/diamond-ontapclustercollector
 
 
-## Usage
+# Set-up
 
-To use this bosh release, first upload it to your bosh:
-
-```
-bosh target BOSH_HOST
-git clone https://github.com/springerpe/diamond-boshrelease.git
-cd diamond-boshrelease
-bosh upload release releases/diamond-1.yml
-```
-
-### Setup
-
-Example, to send metrics to graphite using OntaClusterCollector:
-https://github.com/SpringerPE/diamond-ontapclustercollector
-
+Example configuration to send metrics graphite using OntaClusterCollector
 
 ```
 properties:
@@ -237,13 +224,6 @@ For [bosh-lite](https://github.com/cloudfoundry/bosh-lite), you can quickly crea
 
 ```
 templates/make_manifest warden
-bosh -n deploy
-```
-
-For AWS EC2, create a single VM:
-
-```
-templates/make_manifest aws-ec2
 bosh -n deploy
 ```
 

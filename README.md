@@ -1,29 +1,25 @@
-# BOSH Release for diamond
+# BOSH Release for [Diamond](https://github.com/python-diamond/Diamond)
 
-https://github.com/python-diamond/Diamond
-
-
-The purpose of this release is running some specialized collectors to send metrics
-to different systems. For regular monitoring collectd is better. 
+The purpose of this release is running some specialized collectors to gather metrics from
+external platforms and send them to different systems. For regular monitoring of the vms, 
+collectd is better. 
 
 Specialized collectors are:
 
- * Ontapclustercollector, to be able to collect metrics for NetAPP
- * VMWARE collector to get metrics from VCenter.
+ * Ontapclustercollector, to be able to collect metrics from NetAPP
+ * VMWARE collector to gather VCenter metrics.
 
 
 ## Usage
 
-Put your collectors and user_scripts in `src` folder and create a bosh release.
-We are using submodules, so you have to run:
+By default all collectors shipped with Diamond are available, but you can
+add your own collectors and user_scripts via `src` folder and create a new
+BOSH Release. We are using submodules, so you have to run:
 
 ```
 git submodule init
 git submodule update
 ```
-
-By default all collectors shipped with Diamond are available.
-
 
 To use this bosh release, first upload it to your bosh:
 
@@ -34,3 +30,5 @@ cd diamond-boshrelease
 bosh upload release releases/diamond-1.yml
 ```
 
+As example, this is how to define the 
+[OntapClusterCollector](https://github.com/SpringerPE/diamond-boshrelease/blob/master/README.netappclustercollector.md)
