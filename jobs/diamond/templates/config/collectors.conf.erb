@@ -1,0 +1,5 @@
+<% p("diamond.collectors_config", {}).each do |collector, options| %>
+#-- <%= collector.split('.')[-1] %> --#
+<% options.each do |key, value| %><%= key %> = <%= value %>
+<% end %>
+<% end %>

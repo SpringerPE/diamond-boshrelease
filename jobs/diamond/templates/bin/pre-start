@@ -1,0 +1,44 @@
+#!/bin/bash
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+# Setup env vars and folders for the ctl script
+source /var/vcap/jobs/diamond/helpers/ctl_setup.sh 'diamond'
+
+
+# Python dlopen does not pay attention to LD_LIBRARY_PATH, so
+# ctypes.util.find_library is not able to find dyn libs, the only
+# way to do is by defining the folders in ldconfig
+function ldconf {
+    local path=${1}
+
+    echo "$path" | tr ':' '\n' > $TMP_DIR/ld.so.conf
+    ldconfig -f $TMP_DIR/ld.so.conf
+    rm -f $TMP_DIR/ld.so.conf
+}
+
+function split_config {
+    local fileall=${1}
+    local path=${2}
+
+    if [ -f "$fileall" ]; then
+        (
+            mkdir -p $path && cd $path
+            csplit -s -z --prefix=collector. ${fileall} '/#-- [0-9a-zA-z_]* --#/' '{*}'
+            for f in collector.??; do
+                if [ -s "$f" ]; then
+                    name=$(sed -n -e  's/#-- \([A-Za-z0-9]*\) --#/\1/p' "$f")
+                    [ $? == 0 ] && mv "$f" "$name.conf"
+                else
+                    rm -f "$f"
+                fi
+            done
+        )
+    fi
+}
+
+ldconf $LD_LIBRARY_PATH
+rm -rf "${JOB_DIR}/config/collectors"
+split_config "${JOB_DIR}/config/collectors.conf" "${JOB_DIR}/config/collectors"
+
+exit 0

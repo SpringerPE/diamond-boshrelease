@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# -------------------------------------------------------------------
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+# Original Source:
+# https://github.com/logsearch/logsearch-boshrelease
+# -------------------------------------------------------------------
+
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+# Setup env vars and folders for the ctl script
+source /var/vcap/jobs/diamond/helpers/ctl_setup.sh 'diamond'
+
+case $1 in
+  start)
+    log "Starting diamond ..."
+    pid_guard $PIDFILE $JOB_NAME
+    exec "${JOB_DIR}/packages/diamond/bin/diamond" \
+        --configfile="${JOB_DIR}/config/diamond.conf" \
+        --pidfile=${PIDFILE} \
+        --user=vcap \
+        --group=vcap \
+        >>$LOG_DIR/$JOB_NAME.stdout.log \
+        2>>$LOG_DIR/$JOB_NAME.stderr.log
+    ;;
+  reload)
+    log "Reload diamond ..."
+    kill -SIGHUP $(cat $PIDFILE)
+    ;;
+  stop)
+    log "Stopping diamond ... "
+    kill_and_wait $PIDFILE
+    ;;
+  *)
+    echo "Usage: diamond {start|stop}"
+    ;;
+esac
+exit 0

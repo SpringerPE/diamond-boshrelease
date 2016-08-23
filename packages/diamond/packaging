@@ -1,0 +1,66 @@
+set -e -x
+
+echo "Extracting configobj ..."
+tar xvf diamond/configobj-5.0.6.tar.gz
+
+echo "Extracting six ..."
+tar xvf diamond/six-1.10.0.tar.gz
+
+echo "Extracting psutil ..."
+tar xvf diamond/psutil-4.3.0.tar.gz
+
+echo "Extracting diamond ..."
+tar xvf diamond/diamond-4.0.451.tar.gz
+
+echo "Creating python site packages folder ..."
+mkdir -p ${BOSH_INSTALL_TARGET}/lib/python2.7/site-packages
+
+echo "Setting the PYTHONPATH with setuptools and diamond site packages ..."
+PYTHONPATH="${BOSH_INSTALL_TARGET}/lib/python2.7/site-packages:${PYTHONPATH}"
+PYTHONPATH="/var/vcap/packages/setuptools/lib/python2.7/site-packages:${PYTHONPATH}"
+export PYTHONPATH
+
+echo "Setting setuptools build sources ..."
+CPATH="/var/vcap/packages/libyaml/include"
+export CPATH
+LIBRARY_PATH="/var/vcap/packages/libyaml/lib:${LIBRARY_PATH}"
+LIBRARY_PATH="/var/vcap/packages/openssl/lib:${LIBRARY_PATH}"
+export LIBRARY_PATH
+export LD_LIBRARY_PATH="${LIBRARY_PATH}"
+
+
+echo "Installing six ..."
+pushd six-1.10.0
+  /var/vcap/packages/python27/bin/python setup.py install --prefix=${BOSH_INSTALL_TARGET}
+popd
+
+echo "Installing configobj ..."
+pushd configobj-5.0.6
+  /var/vcap/packages/python27/bin/python setup.py install --prefix=${BOSH_INSTALL_TARGET}
+popd
+
+echo "Installing psutil ..."
+pushd psutil-4.3.0
+  /var/vcap/packages/python27/bin/python setup.py install --prefix=${BOSH_INSTALL_TARGET}
+popd
+
+echo "Installing diamond ..."
+pushd diamond-4.0.451
+  /var/vcap/packages/python27/bin/python setup.py install --prefix=${BOSH_INSTALL_TARGET}
+popd
+
+collectors=$(find collectors -maxdepth 1 -type d  ! -path collectors)
+if [ "${collectors}" ]; then
+  echo "Adding collectors ..."
+  for collector in ${collectors}; do
+    cp -av ${collector}/src/* ${BOSH_INSTALL_TARGET}/share/diamond/collectors/
+  done
+fi
+
+uss=$(find user_scripts -maxdepth 1 -type d  ! -path user_scripts)
+if [ "${uss}" ]; then
+  echo "Adding user_scripts ..."
+  for us in ${uss}; do
+      cp -av ${us}/src/* ${BOSH_INSTALL_TARGET}/share/diamond/user_scripts/
+  done
+fi

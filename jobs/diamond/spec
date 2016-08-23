@@ -1,0 +1,68 @@
+---
+name: diamond
+
+description: Diamond monitoring
+
+packages:
+- openssl
+- bzip2
+- zlib
+- libyaml
+- setuptools
+- python27
+- diamond
+
+templates:
+  bin/diamond_ctl: bin/ctl
+  bin/pre-start: bin/pre-start
+  config/diamond.conf.erb: config/diamond.conf
+  config/collectors.conf.erb: config/collectors.conf
+  data/properties.sh.erb: data/properties.sh
+  helpers/ctl_setup.sh: helpers/ctl_setup.sh
+  helpers/ctl_utils.sh: helpers/ctl_utils.sh
+  bin/monit_debugger: bin/monit_debugger
+
+properties:
+  diamond.log_level:
+    description: Log level
+    default: INFO
+  diamond.handlers:
+    description: Hash of handlers with their properties
+    default:
+      diamond.handler.archive.ArchiveHandler:
+        log_file: "/var/vcap/store/diamond/archive.log"
+        days: 7
+  diamond.collector.hostname:
+    description: Hostname for the collector path
+  diamond.collector.prefix:
+    description: Prefix for the metrics
+    default: servers
+  diamond.collector.suffix:
+    description: Suffix for metrics
+    default: ""
+  diamond.collector.instance_prefix:
+    description: Prefix for each instances
+    default: instances
+  diamond.collector.interval:
+    description: Interval
+    default: 60
+  diamond.collectors:
+    description: Hash of collectors with their properties
+    default:
+      CPUCollector:
+        enabled: False
+      DiskSpaceCollector:
+        enabled: False
+      DiskUsageCollector:
+        enabled: False
+      LoadAverageCollector:
+        enabled: False
+      MemoryCollector:
+        enabled: False
+      VMStatCollector:
+        enabled: False
+      NetworkCollector:
+        enabled: False
+  diamond.collectors_config:
+    description: Hash of collectors wit their properties
+    default: {}

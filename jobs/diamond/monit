@@ -1,0 +1,5 @@
+check process diamond
+  with pidfile /var/vcap/sys/run/diamond/diamond.pid
+  start program "/var/vcap/jobs/diamond/bin/ctl start"
+  stop program "/var/vcap/jobs/diamond/bin/ctl stop"
+  group vcap
