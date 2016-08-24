@@ -1,5 +1,7 @@
-<% p("diamond.collectors_config", {}).each do |collector, options| %>
-#-- <%= collector.split('.')[-1] %> --#
-<% options.each do |key, value| %><%= key %> = <%= value %>
+<% p("diamond.collectors_config", {}).each do |collector, options| %>#-- <%= collector.split('.')[-1] %> --#
+<% options.each do |key, value| %><% if key != 'config' %><%= key %> = <%= value %><% end %>
 <% end %>
+<% if options['config'] %><%= options['config'] %>
+<% end %>
+
 <% end %>
