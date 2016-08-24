@@ -5,7 +5,6 @@ set -u # report the usage of uninitialized variables
 # Setup env vars and folders for the ctl script
 source /var/vcap/jobs/diamond/helpers/ctl_setup.sh 'diamond'
 
-
 # Python dlopen does not pay attention to LD_LIBRARY_PATH, so
 # ctypes.util.find_library is not able to find dyn libs, the only
 # way to do is by defining the folders in ldconfig
@@ -17,10 +16,12 @@ function ldconf {
     rm -f $TMP_DIR/ld.so.conf
 }
 
+
 function split_config {
     local fileall=${1}
     local path=${2}
 
+    rm -f ${path}/*.conf
     if [ -f "$fileall" ]; then
         (
             mkdir -p $path && cd $path
@@ -38,7 +39,7 @@ function split_config {
 }
 
 ldconf $LD_LIBRARY_PATH
-rm -rf "${JOB_DIR}/config/collectors"
+
+mkdir -p "${JOB_DIR}/config/collectors"
 split_config "${JOB_DIR}/config/collectors.conf" "${JOB_DIR}/config/collectors"
 
-exit 0
