@@ -5,7 +5,7 @@
 ################################################################################
 ### Options for the server
 [server]
-handlers=<% p("diamond.handlers", []).each do |handler, options| %><%= handler %>,<% end %>
+handlers = <% p("diamond.handlers", {}).each do |handler, options| %><%= handler %>,<% end %>
 
 # User diamond will run as
 # Leave empty to use the current user
