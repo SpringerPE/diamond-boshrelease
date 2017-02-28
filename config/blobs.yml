@@ -12,9 +12,9 @@ openssl/openssl-1.0.2h.tar.gz:
   sha: 577585f5f5d299c44dd3c993d3c0ac7a219e4949
   size: 5274412
 diamond/configobj-5.0.6.tar.gz:
-  object_id: 7505d3fe-3e5f-49a5-8398-fc76a1f6e9aa
-  sha: add3ae15e3f0d2d28d37370dcad930243cb4145c
-  size: 33248
+  object_id: c71b61bf-5e28-401d-9ff8-261d3b46320a
+  sha: b7cadbe17ff69953b3060eaf941fbd95959452be
+  size: 143664
 diamond/diamond-4.0.451.tar.gz:
   object_id: 1d167a03-e1c2-445f-a1b6-c154cf9b7978
   sha: 2e2f8a55186762613b3561933fc5c973bea9545b
@@ -43,3 +43,31 @@ libyaml/yaml-0.1.6.tar.gz:
   object_id: 1905e37c-f049-49ce-82d1-513fb1ccea58
   sha: f3d404e11bec3c4efcddfd14c42d46f1aabe0b5d
   size: 503012
+zlib/zlib-1.2.11.tar.gz:
+  object_id: 8585b1d0-a9c3-468a-939f-9ae0fc9b616f
+  sha: e6d119755acdf9104d7ba236b1242696940ed6dd
+  size: 607698
+setuptools/setuptools-33.1.1.tar.gz:
+  object_id: ff445850-8b38-49ff-869f-bd04701d1ecf
+  sha: ec1548d92dd3a9bec62d3ce3bce8902feabe61bf
+  size: 652126
+openssl/openssl-1.0.2j.tar.gz:
+  object_id: a2de8d29-c037-4830-a39c-7cdc2ff0fb7b
+  sha: bdfbdb416942f666865fa48fe13c2d0e588df54f
+  size: 5307912
+diamond/diamond-4.0.515.tar.gz:
+  object_id: b3516c36-5163-4b13-a5af-924afff08f84
+  sha: d8b0e2d9c6460719f0b47017f182c1888cde9860
+  size: 620337
+diamond/psutil-5.0.1.tar.gz:
+  object_id: 8e73f239-9381-4392-919a-ab560e68e49f
+  sha: 0cfc35492185bc6ebe768c70ed86a4eb32e25e4f
+  size: 1833258
+python/Python-2.7.13.tar.xz:
+  object_id: d1191517-99e2-4e35-b127-829563104d0f
+  sha: 18a8f30a0356c751b8d0ea6f76e764cab13ee046
+  size: 12495628
+libyaml/yaml-0.1.7.tar.gz:
+  object_id: 5c6c8899-c8c7-42fb-878a-86cbc8210d45
+  sha: 3590cbf092ef4c71bc0a9b404c00a626b1e04dee
+  size: 527518
