@@ -10,9 +10,9 @@ dependencies:
 - setuptools
 
 files:
-- diamond/diamond-4.0.451.tar.gz	      # https://pypi.python.org/packages/f5/00/69cdd58029f3f99d395eb41b1d0f4196ac222072ee261b8473d2579544d9/diamond-4.0.451.tar.gz
-- diamond/configobj-5.0.6.tar.gz	      # https://pypi.python.org/packages/64/61/079eb60459c44929e684fa7d9e2fdca403f67d64dd9dbac27296be2e0fab/configobj-5.0.6.tar.gz
+- diamond/diamond-4.0.515.tar.gz          # https://github.com/python-diamond/Diamond/archive/v4.0.515.tar.gz
+- diamond/configobj-5.0.6.tar.gz          # https://github.com/DiffSK/configobj/archive/v5.0.6.tar.gz
 - diamond/six-1.10.0.tar.gz	              # https://pypi.python.org/packages/b3/b2/238e2590826bfdd113244a40d9d3eb26918bd798fc187e2360a8367068db/six-1.10.0.tar.gz
-- diamond/psutil-4.3.0.tar.gz             # https://pypi.python.org/packages/22/a8/6ab3f0b3b74a36104785808ec874d24203c6a511ffd2732dd215cf32d689/psutil-4.3.0.tar.gz
+- diamond/psutil-5.0.1.tar.gz             # https://github.com/giampaolo/psutil/archive/release-5.0.1.tar.gz
 - collectors/**/*
 - user_scripts/**/*

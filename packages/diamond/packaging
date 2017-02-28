@@ -1,52 +1,78 @@
+#!/usr/bin/env bash
+
+# abort script on any command that exits with a non zero value
 set -e -x
 
+# Grab the latest versions that are in the directory
+DIAMOND_VERSION=$(ls -r diamond/diamond-*.tar.gz | sed 's/.*\/diamond-\(.*\)\.tar\.gz$/\1/' | head -1)
+CONFIGOBJ_VERSION=$(ls -r diamond/configobj-*.tar.gz | sed 's/.*\/configobj-\(.*\)\.tar\.gz$/\1/' | head -1)
+SIX_VERSION=$(ls -r diamond/six-*.tar.gz | sed 's/.*\/six-\(.*\)\.tar\.gz$/\1/' | head -1)
+PSUTIL_VERSION=$(ls -r diamond/psutil-*.tar.gz | sed 's/.*\/psutil-\(.*\)\.tar\.gz$/\1/' | head -1)
+BOSH_PACKAGES_DIR=${BOSH_PACKAGES_DIR:-/var/vcap/packages}
+
+
 echo "Extracting configobj ..."
-tar xvf diamond/configobj-5.0.6.tar.gz
+tar xvf "diamond/configobj-$CONFIGOBJ_VERSION.tar.gz"
 
 echo "Extracting six ..."
-tar xvf diamond/six-1.10.0.tar.gz
+tar xvf "diamond/six-$SIX_VERSION.tar.gz"
 
 echo "Extracting psutil ..."
-tar xvf diamond/psutil-4.3.0.tar.gz
+tar xvf "diamond/psutil-$PSUTIL_VERSION.tar.gz"
 
 echo "Extracting diamond ..."
-tar xvf diamond/diamond-4.0.451.tar.gz
+tar xvf "diamond/diamond-$DIAMOND_VERSION.tar.gz"
 
 echo "Creating python site packages folder ..."
 mkdir -p ${BOSH_INSTALL_TARGET}/lib/python2.7/site-packages
 
 echo "Setting the PYTHONPATH with setuptools and diamond site packages ..."
 PYTHONPATH="${BOSH_INSTALL_TARGET}/lib/python2.7/site-packages:${PYTHONPATH}"
-PYTHONPATH="/var/vcap/packages/setuptools/lib/python2.7/site-packages:${PYTHONPATH}"
+for package_python_dir in $(ls -d ${BOSH_PACKAGES_DIR}/*/lib/python*/site-packages 2>/dev/null); do
+    PYTHONPATH="${package_python_dir}:${PYTHONPATH}"
+done
+for package_python_dir in $(ls -d ${BOSH_INSTALL_TARGET}/lib/python*/site-packages 2>/dev/null); do
+    PYTHONPATH="${package_python_dir}:${PYTHONPATH}"
+done
 export PYTHONPATH
 
-echo "Setting setuptools build sources ..."
-CPATH="/var/vcap/packages/libyaml/include"
-export CPATH
-LIBRARY_PATH="/var/vcap/packages/libyaml/lib:${LIBRARY_PATH}"
-LIBRARY_PATH="/var/vcap/packages/openssl/lib:${LIBRARY_PATH}"
-export LIBRARY_PATH
+echo "Setting libs path ..."
+for package_lib_dir in $(ls -d ${BOSH_PACKAGES_DIR}/*/lib 2>/dev/null); do
+    LIBRARY_PATH="${package_lib_dir}:${LIBRARY_PATH}"
+done
+export LIBRARY_PATH="${BOSH_INSTALL_TARGET}/lib:${LIBRARY_PATH}"
 export LD_LIBRARY_PATH="${LIBRARY_PATH}"
 
+echo "Setting path ..."
+for package_bin_dir in $(ls -d ${BOSH_PACKAGES_DIR}/*/bin 2>/dev/null); do
+    PATH="${package_bin_dir}:${PATH}"
+done
+export PATH="${BOSH_INSTALL_TARGET}/bin:${PATH}"
+
+echo "Setting setuptools build sources ..."
+for package_cpath_dir in $(ls -d ${BOSH_PACKAGES_DIR}/*/include 2>/dev/null); do
+    CPATH="${package_cpath_dir}:${CPATH}"
+done
+export CPATH="${BOSH_INSTALL_TARGET}/include:${CPATH}"
 
 echo "Installing six ..."
-pushd six-1.10.0
-  /var/vcap/packages/python27/bin/python setup.py install --prefix=${BOSH_INSTALL_TARGET}
+pushd six-$SIX_VERSION
+  python setup.py install --prefix=${BOSH_INSTALL_TARGET}
 popd
 
 echo "Installing configobj ..."
-pushd configobj-5.0.6
-  /var/vcap/packages/python27/bin/python setup.py install --prefix=${BOSH_INSTALL_TARGET}
+pushd configobj-$CONFIGOBJ_VERSION
+  python setup.py install --prefix=${BOSH_INSTALL_TARGET}
 popd
 
 echo "Installing psutil ..."
-pushd psutil-4.3.0
-  /var/vcap/packages/python27/bin/python setup.py install --prefix=${BOSH_INSTALL_TARGET}
+pushd psutil-$PSUTIL_VERSION
+  python setup.py install --prefix=${BOSH_INSTALL_TARGET}
 popd
 
 echo "Installing diamond ..."
-pushd diamond-4.0.451
-  /var/vcap/packages/python27/bin/python setup.py install --prefix=${BOSH_INSTALL_TARGET}
+pushd diamond-$DIAMOND_VERSION
+  python setup.py install --prefix=${BOSH_INSTALL_TARGET}
 popd
 
 collectors=$(find collectors -maxdepth 1 -type d  ! -path collectors)

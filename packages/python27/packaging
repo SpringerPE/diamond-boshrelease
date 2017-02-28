@@ -3,28 +3,39 @@
 # abort script on any command that exits with a non zero value
 set -e -x
 
-echo "Extracting python ... "
-tar xvf python/Python-2.7.12.tar.xz
+# Grab the latest versions that are in the directory
+PYTHON_VERSION=$(ls -r python/Python-*.tar.xz | sed 's/.*\/Python-\(.*\)\.tar\.xz$/\1/' | head -1)
+BOSH_PACKAGES_DIR=${BOSH_PACKAGES_DIR:-/var/vcap/packages}
+
+echo "Extracting python ${PYTHON_VERSION} ... "
+tar xvf python/Python-${PYTHON_VERSION}.tar.xz
 
 echo "Defining libraries path ..."
-CPPFLAGS="-I/var/vcap/packages/bzip2/include ${CPPFLAGS}"
-CPPFLAGS="-I/var/vcap/packages/zlib/include ${CPPFLAGS}"
-CPPFLAGS="-I/var/vcap/packages/openssl/include ${CPPFLAGS}"
+export CFLAGS="-fPIC ${CFLAGS}"
+for package_include_dir in $(ls -d ${BOSH_PACKAGES_DIR}/*/include 2>/dev/null); do
+    CPPFLAGS="-I${package_include_dir} ${CPPFLAGS}"
+done
+for package_lib_dir in $(ls -d ${BOSH_PACKAGES_DIR}/*/lib 2>/dev/null); do
+    LDFLAGS="-L${package_lib_dir} ${LDFLAGS}"
+    LIBRARY_PATH="${package_lib_dir}:${LIBRARY_PATH}"
+done
 export CPPFLAGS
-LDFLAGS="-L/var/vcap/packages/bzip2/lib ${LDFLAGS}"
-LDFLAGS="-L/var/vcap/packages/zlib/lib ${LDFLAGS}"
-LDFLAGS="-L/var/vcap/packages/openssl/lib ${LDFLAGS}"
 export LDFLAGS
-LIBRARY_PATH="/var/vcap/packages/bzip2/lib:${LIBRARY_PATH}"
-LIBRARY_PATH="/var/vcap/packages/zlib/lib:${LIBRARY_PATH}"
-LIBRARY_PATH="/var/vcap/packages/openssl/lib:${LIBRARY_PATH}"
 export LIBRARY_PATH
 export LD_LIBRARY_PATH="${LIBRARY_PATH}"
-export CFLAGS="-fPIC ${CFLAGS}"
 
-echo "Building python ... "
-pushd Python-2.7.12
-  ./configure --prefix=${BOSH_INSTALL_TARGET}
+echo "Building and installing Python ... "
+pushd Python-${PYTHON_VERSION}
+  ./configure --enable-optimizations --prefix=${BOSH_INSTALL_TARGET}
   make
   make install
 popd
+
+# remove shebang pointing to packages dir
+for pyf in ${BOSH_INSTALL_TARGET}/bin/*; do
+  if file -b $pyf | grep -iq "python.* script"; then
+    echo "Changing shebang: $pyf"
+    sed -i -e '1s:^#!/var/vcap/packages/python[0-9a-zA-Z_\.-]*/bin/python[0-9a-zA-Z_\.-]*:#!/usr/bin/env python:' $pyf
+  fi
+done
+
