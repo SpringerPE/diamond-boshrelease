@@ -55,5 +55,5 @@ jobs:
   sha1: 227514d1f034b7d7e97fb4bf97f180213700314d
 commit_hash: d47d1e68
 uncommitted_changes: true
-name: diamond-boshrelease
+name: diamond
 version: '1'
