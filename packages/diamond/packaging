@@ -66,12 +66,12 @@ pushd configobj-$CONFIGOBJ_VERSION
 popd
 
 echo "Installing psutil ..."
-pushd psutil-$PSUTIL_VERSION
+pushd psutil-release-$PSUTIL_VERSION
   python setup.py install --prefix=${BOSH_INSTALL_TARGET}
 popd
 
 echo "Installing diamond ..."
-pushd diamond-$DIAMOND_VERSION
+pushd Diamond-$DIAMOND_VERSION
   python setup.py install --prefix=${BOSH_INSTALL_TARGET}
 popd
 
