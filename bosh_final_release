@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-RELEASE="diamond"
 DESCRIPTION="Diamond Collector Bosh Release"
-GITHUB_REPO="SpringerPE/diamond-boshrelease"
-BUCKET="diamond-boshrelease"
+BUCKET=$(cat config/final.yml | awk '/bucket_name:/{ print $2 }')
+RELEASE=$(cat config/final.yml | awk '/final_name:/{ print $2 }')
+GITHUB_REPO="SpringerPE/${BUCKET}"
+
 BOSH=bosh
 S3CMD=s3cmd
 JQ=jq
@@ -39,8 +40,13 @@ if ! $S3CMD ls | grep -q "s3://${BUCKET}"; then
     exit 1
 fi
 
-# Creating the release
-$BOSH create release --force --final --with-tarball --name $RELEASE
+if [ -d releases/$RELEASE ]; then
+    # Creating the release, version will be incremented automatically
+    $BOSH create release --final --with-tarball --name $RELEASE
+else
+    # Creating the release, first version
+    $BOSH create release --final --with-tarball --name $RELEASE --version 1
+fi
 
 # Get the version of the release
 VERSION=$(ls -r -v releases/$RELEASE/$RELEASE-*.yml | sed 's/.*\/.*-\(.*\)\.yml$/\1/' | head -1)
@@ -74,3 +80,4 @@ rm -f releases/$RELEASE/$RELEASE-$VERSION.tgz
 # Update ACLs on bucket
 echo "Assigning public ACL to new blobs in bucket ..."
 $S3CMD setacl "s3://${BUCKET}" --acl-public --recursive
+
