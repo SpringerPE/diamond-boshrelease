@@ -1,0 +1,60 @@
+---
+packages:
+- name: zlib
+  version: 81fcee5b4a1a3aa9f59208420faee4449fecb40d
+  fingerprint: 81fcee5b4a1a3aa9f59208420faee4449fecb40d
+  sha1: 8d38da9274de03cd39d2a40916c13d07da4b3da3
+  dependencies: []
+- name: python27
+  version: ed9de98ed800a57de341c6e5f8dc67e9ceb49f65
+  fingerprint: ed9de98ed800a57de341c6e5f8dc67e9ceb49f65
+  sha1: 2ece17ad87ac126c7338af42b097fdecf2d4da2f
+  dependencies:
+  - bzip2
+  - openssl
+  - zlib
+- name: setuptools
+  version: b27904739c70d3557f50d4820c377556f958963b
+  fingerprint: b27904739c70d3557f50d4820c377556f958963b
+  sha1: 24e4651080f65a59f98e808f626be187cfe16390
+  dependencies:
+  - bzip2
+  - openssl
+  - python27
+  - zlib
+- name: openssl
+  version: b3008bc25cec057cd41ad82150ef51a03b64e477
+  fingerprint: b3008bc25cec057cd41ad82150ef51a03b64e477
+  sha1: ed041db2d08b4a14baa8426495a4e24231ad42ea
+  dependencies:
+  - zlib
+- name: diamond
+  version: d5fdc136ebcab421fe7f9e41fc883fd6e5b3159b
+  fingerprint: d5fdc136ebcab421fe7f9e41fc883fd6e5b3159b
+  sha1: 7e753c5582ba8f3d13af8355bdb6130257661abe
+  dependencies:
+  - bzip2
+  - libyaml
+  - openssl
+  - python27
+  - setuptools
+  - zlib
+- name: bzip2
+  version: 2b44ddce9f82cb956c89e13b724a62f0301b9b9a
+  fingerprint: 2b44ddce9f82cb956c89e13b724a62f0301b9b9a
+  sha1: 87733134598e238dae45e6715cce6a1198ec2d97
+  dependencies: []
+- name: libyaml
+  version: 46e7275caf8567fedf7cb0c1879f19afae800b82
+  fingerprint: 46e7275caf8567fedf7cb0c1879f19afae800b82
+  sha1: 79b241b9d4cc2b7357816a0db6295f5906dcbca6
+  dependencies: []
+jobs:
+- name: diamond
+  version: 79f555f6bcfd9c4bf251171cd6a7c70ad6132d53
+  fingerprint: 79f555f6bcfd9c4bf251171cd6a7c70ad6132d53
+  sha1: 227514d1f034b7d7e97fb4bf97f180213700314d
+commit_hash: b3d134ac
+uncommitted_changes: true
+name: diamond
+version: '4'
